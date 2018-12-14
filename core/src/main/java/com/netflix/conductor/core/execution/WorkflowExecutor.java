@@ -252,10 +252,14 @@ public class WorkflowExecutor {
             String event,
             Map<String, String> taskToDomain
     ) {
+        long a1 = java.lang.System.currentTimeMillis();
         workflowDefinition = metadataMapperService.populateTaskDefinitions(workflowDefinition);
+        LOGGER.info("end : populate task def wf " + String.valueOf(java.lang.System.currentTimeMillis() - a1));
 
         // perform validations
+        long a2 = java.lang.System.currentTimeMillis();
         validateWorkflow(workflowDefinition, workflowInput, externalInputPayloadStoragePath);
+        LOGGER.info("end : validate wf " + String.valueOf(java.lang.System.currentTimeMillis() - a2));
 
         //A random UUID is assigned to the work flow instance
         String workflowId = IDGenerator.generate();
@@ -276,12 +280,17 @@ public class WorkflowExecutor {
         workflow.setUpdateTime(null);
         workflow.setEvent(event);
         workflow.setTaskToDomain(taskToDomain);
-
+        long a3 = java.lang.System.currentTimeMillis();
         executionDAOFacade.createWorkflow(workflow);
+        LOGGER.info("end : create wf " + String.valueOf(java.lang.System.currentTimeMillis() - a3));
         LOGGER.info("A new instance of workflow {} created with workflow id {}", workflow.getWorkflowName(), workflowId);
 
         //then decide to see if anything needs to be done as part of the workflow
+        long a4 = java.lang.System.currentTimeMillis();
         decide(workflowId);
+        LOGGER.info("end : decide wf " + String.valueOf(java.lang.System.currentTimeMillis()-a4));
+
+        LOGGER.info("end : total " + String.valueOf(java.lang.System.currentTimeMillis()-a1));
         return workflowId;
     }
 
