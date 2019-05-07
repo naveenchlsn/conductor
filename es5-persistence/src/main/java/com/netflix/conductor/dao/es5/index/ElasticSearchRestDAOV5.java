@@ -124,11 +124,12 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
         int corePoolSize = 10;
         int maximumPoolSize = 20;
         long keepAliveTime = 1L;
+        int linkedBloxkingQueueSize = 100;
         this.executorService = new ThreadPoolExecutor(corePoolSize,
                 maximumPoolSize,
                 keepAliveTime,
                 TimeUnit.MINUTES,
-                new LinkedBlockingQueue<>());
+                new LinkedBlockingQueue<>(linkedBloxkingQueueSize));
 
     }
 
