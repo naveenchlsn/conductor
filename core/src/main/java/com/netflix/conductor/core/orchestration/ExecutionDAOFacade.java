@@ -143,7 +143,7 @@ public class ExecutionDAOFacade {
      */
     public String createWorkflow(Workflow workflow) {
         executionDAO.createWorkflow(workflow);
-        indexDAO.asyncIndexWorkflow(workflow);
+        indexDAO.indexWorkflow(workflow);
         return workflow.getWorkflowId();
     }
 
@@ -155,7 +155,7 @@ public class ExecutionDAOFacade {
      */
     public String updateWorkflow(Workflow workflow) {
         executionDAO.updateWorkflow(workflow);
-        indexDAO.asyncIndexWorkflow(workflow);
+        indexDAO.indexWorkflow(workflow);
         return workflow.getWorkflowId();
     }
 
@@ -176,12 +176,12 @@ public class ExecutionDAOFacade {
             // remove workflow from ES
             if (archiveWorkflow) {
                 //Add to elasticsearch
-                indexDAO.asyncUpdateWorkflow(workflowId,
+                indexDAO.updateWorkflow(workflowId,
                         new String[]{RAW_JSON_FIELD, ARCHIVED_FIELD},
                         new Object[]{objectMapper.writeValueAsString(workflow), true});
             } else {
                 // Not archiving, also remove workflowId from index
-                indexDAO.asyncRemoveWorkflow(workflowId);
+                indexDAO.removeWorkflow(workflowId);
             }
 
             // remove workflow from DAO
@@ -270,14 +270,14 @@ public class ExecutionDAOFacade {
     public boolean addEventExecution(EventExecution eventExecution) {
         boolean added = executionDAO.addEventExecution(eventExecution);
         if (added) {
-            indexDAO.asyncAddEventExecution(eventExecution);
+            indexDAO.addEventExecution(eventExecution);
         }
         return added;
     }
 
     public void updateEventExecution(EventExecution eventExecution) {
         executionDAO.updateEventExecution(eventExecution);
-        indexDAO.asyncAddEventExecution(eventExecution);
+        indexDAO.addEventExecution(eventExecution);
     }
 
     public void removeEventExecution(EventExecution eventExecution) {
@@ -293,7 +293,7 @@ public class ExecutionDAOFacade {
     }
 
     public void addTaskExecLog(List<TaskExecLog> logs) {
-        indexDAO.asyncAddTaskExecutionLogs(logs);
+        indexDAO.addTaskExecutionLogs(logs);
     }
 
     public void addMessage(String queue, Message message) {
