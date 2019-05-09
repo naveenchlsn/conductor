@@ -130,7 +130,7 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
                 keepAliveTime,
                 TimeUnit.MINUTES,
                 new LinkedBlockingQueue<>(workerQueueSize),
-                new ThreadPoolExecutor.CallerRunsPolicy());
+                new ThreadPoolExecutor.DiscardPolicy());
 
     }
 
