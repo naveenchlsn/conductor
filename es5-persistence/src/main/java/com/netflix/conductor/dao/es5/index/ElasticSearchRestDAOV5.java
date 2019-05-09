@@ -122,14 +122,15 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
 
         // Set up a workerpool for performing async operations.
         int corePoolSize = 10;
-        int maximumPoolSize = 20;
+        int maximumPoolSize = config.getIntProperty("workflow.elasticsearch.async.dao.worker.pool.size",20);;
         long keepAliveTime = 1L;
         int workerQueueSize = config.getAsyncWorkerQueueSize();
         this.executorService = new ThreadPoolExecutor(corePoolSize,
                 maximumPoolSize,
                 keepAliveTime,
                 TimeUnit.MINUTES,
-                new LinkedBlockingQueue<>(workerQueueSize));
+                new LinkedBlockingQueue<>(workerQueueSize),
+                new ThreadPoolExecutor.CallerRunsPolicy());
 
     }
 
