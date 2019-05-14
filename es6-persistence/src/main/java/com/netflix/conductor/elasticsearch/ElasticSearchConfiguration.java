@@ -49,6 +49,9 @@ public interface ElasticSearchConfiguration extends Configuration {
     String ELASTIC_SEARCH_ASYNC_DAO_WORKER_QUEUE_SIZE = "workflow.elasticsearch.async.dao.worker.queue.size";
     int DEFAULT_ASYNC_WORKER_QUEUE_SIZE = 100;
 
+    String ELASTIC_SEARCH_ASYNC_DAO_MAX_POOL_SIZE = "workflow.elasticsearch.async.dao.max.pool.size";
+    int DEFAULT_ASYNC_MAX_POOL_SIZE = 12;
+
     default String getURL() {
         return getProperty(ELASTIC_SEARCH_URL_PROPERTY_NAME, ELASTIC_SEARCH_URL_DEFAULT_VALUE);
     }
@@ -86,7 +89,7 @@ public interface ElasticSearchConfiguration extends Configuration {
 
     default int getEmbeddedPort() {
         return getIntProperty(EMBEDDED_PORT_PROPERTY_NAME, EMBEDDED_PORT_DEFAULT_VALUE);
-
+        
     }
 
     default String getEmbeddedClusterName() {
@@ -120,6 +123,10 @@ public interface ElasticSearchConfiguration extends Configuration {
     }
 
     default int getAsyncWorkerQueueSize() {
-        return  getIntProperty(ELASTIC_SEARCH_ASYNC_DAO_WORKER_QUEUE_SIZE, DEFAULT_ASYNC_WORKER_QUEUE_SIZE);
+        return getIntProperty(ELASTIC_SEARCH_ASYNC_DAO_WORKER_QUEUE_SIZE, DEFAULT_ASYNC_WORKER_QUEUE_SIZE);
+    }
+
+    default int getAsyncMaxPoolSize() {
+        return getIntProperty(ELASTIC_SEARCH_ASYNC_DAO_MAX_POOL_SIZE, DEFAULT_ASYNC_MAX_POOL_SIZE);
     }
 }
