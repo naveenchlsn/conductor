@@ -652,7 +652,7 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
             return;
         }
 
-        IndexRequest request = new IndexRequest(index, docType, docId);
+        IndexRequest request = new IndexRequest(index, docType);
         request.source(docBytes, XContentType.JSON);
 
         indexWithRetry(request, "Indexing " + docType + ": " + docId);
