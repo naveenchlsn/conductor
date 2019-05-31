@@ -42,6 +42,7 @@ import java.util.Objects;
 @TaskTimeoutConstraint
 @Valid
 public class TaskDef extends Auditable {
+
 	@ProtoEnum
 	public static enum TimeoutPolicy {RETRY, TIME_OUT_WF, ALERT_ONLY}
 
@@ -102,6 +103,10 @@ public class TaskDef extends Auditable {
 
 	@ProtoField(id = 15)
 	private Integer rateLimitFrequencyInSeconds;
+
+
+	@ProtoField(id = 17	)
+	private String domain;
 
 	public TaskDef() {
 	}
@@ -338,6 +343,15 @@ public class TaskDef extends Auditable {
 		this.inputTemplate = inputTemplate;
 	}
 
+
+	public String getDomain() {
+		return domain;
+	}
+
+	public void setDomain(String domain) {
+		this.domain = domain;
+	}
+
 	@Override
 	public String toString(){
 		return name;
@@ -361,7 +375,8 @@ public class TaskDef extends Auditable {
 				Objects.equals(getConcurrentExecLimit(), taskDef.getConcurrentExecLimit()) &&
 				Objects.equals(getRateLimitPerFrequency(), taskDef.getRateLimitPerFrequency()) &&
 				Objects.equals(getInputTemplate(), taskDef.getInputTemplate()) &&
-				Objects.equals(getIsolationGroupId(), taskDef.getIsolationGroupId());
+				Objects.equals(getIsolationGroupId(), taskDef.getIsolationGroupId()) &&
+				Objects.equals(getDomain(), taskDef.getDomain());
 	}
 
 	@Override
@@ -369,7 +384,7 @@ public class TaskDef extends Auditable {
 
 		return Objects.hash(getName(), getDescription(), getRetryCount(), getTimeoutSeconds(), getInputKeys(),
 				getOutputKeys(), getTimeoutPolicy(), getRetryLogic(), getRetryDelaySeconds(),
-				getResponseTimeoutSeconds(), getConcurrentExecLimit(), getRateLimitPerFrequency(), getInputTemplate(), getIsolationGroupId());
+				getResponseTimeoutSeconds(), getConcurrentExecLimit(), getRateLimitPerFrequency(), getInputTemplate(), getIsolationGroupId(), getDomain());
 	}
 
 	@ProtoField(id = 99)
