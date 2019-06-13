@@ -58,7 +58,6 @@ public class QueueUtils {
         return StringUtils.EMPTY;
     }
 
-
     public static boolean isIsolatedQueue(String queue) {
         return StringUtils.isNotBlank(getIsolationGroup(queue));
     }
@@ -68,9 +67,9 @@ public class QueueUtils {
     }
 
     public static String getTaskType(String queue) {
-        String queueWithoutIsolationGroup = StringUtils.substringBeforeLast(queue, ISOLATION_SEPARATOR);
+        String queueWithoutIsolationGroup = StringUtils.substringBefore(queue, ISOLATION_SEPARATOR);
         if(StringUtils.contains(queueWithoutIsolationGroup,DOMAIN_SEPARATOR)) {
-            return StringUtils.substringAfterLast(queueWithoutIsolationGroup, DOMAIN_SEPARATOR);
+            return StringUtils.substringAfter(queueWithoutIsolationGroup, DOMAIN_SEPARATOR);
         }
         return queueWithoutIsolationGroup;
     }

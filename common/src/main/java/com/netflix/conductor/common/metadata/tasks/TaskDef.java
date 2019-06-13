@@ -105,7 +105,7 @@ public class TaskDef extends Auditable {
 	private Integer rateLimitFrequencyInSeconds;
 
 
-	@ProtoField(id = 17	)
+	@ProtoField(id = 17)
 	private String domain;
 
 	public TaskDef() {

@@ -129,4 +129,13 @@ public class TestSystemTaskWorkerCoordinator {
 		Assert.assertEquals(systemTaskWorkerCoordinator.isFromCoordinatorDomain("domain:testTaskType"), true);
 
 	}
+
+	@Test
+	public void testIsNotFromCoordinatorDomain() {
+		System.setProperty("workflow.system.task.worker.domain","domain-2");
+		Configuration configuration = new SystemPropertiesConfiguration();
+		SystemTaskWorkerCoordinator systemTaskWorkerCoordinator = new SystemTaskWorkerCoordinator(Mockito.mock(QueueDAO.class), Mockito.mock(WorkflowExecutor.class), configuration);
+		Assert.assertEquals(systemTaskWorkerCoordinator.isFromCoordinatorDomain("domain-1:testTaskType"), false);
+
+	}
 }

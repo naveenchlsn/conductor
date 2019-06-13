@@ -89,7 +89,6 @@ public class SystemTaskWorkerCoordinator {
 	private static final String className = SystemTaskWorkerCoordinator.class.getName();
 
 
-
 	@Inject
 	public SystemTaskWorkerCoordinator(QueueDAO queueDAO, WorkflowExecutor workflowExecutor, Configuration config) {
 		this.queueDAO = queueDAO;
@@ -101,7 +100,7 @@ public class SystemTaskWorkerCoordinator {
 		this.pollInterval = config.getIntProperty("workflow.system.task.worker.poll.interval", 50);
 		this.workerQueueSize = config.getIntProperty("workflow.system.task.worker.queue.size", 100);
 		this.workerQueue = new LinkedBlockingQueue<>(workerQueueSize);
-		this.domain =config.getProperty("workflow.system.task.worker.domain","");
+		this.domain =config.getProperty("workflow.system.task.worker.domain",StringUtils.EMPTY);
 
 		if(threadCount > 0) {
 			ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("system-task-worker-%d").build();
@@ -189,7 +188,6 @@ public class SystemTaskWorkerCoordinator {
 	private boolean shouldListen(String workflowSystemTaskQueueName) {
 		return isFromCoordinatorDomain(workflowSystemTaskQueueName) && isSystemTask(workflowSystemTaskQueueName);
 	}
-
 
 	public static boolean isSystemTask(String queue) {
 

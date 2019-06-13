@@ -1,6 +1,5 @@
 package com.netflix.conductor.core.utils;
 
-import com.netflix.conductor.core.execution.tasks.IsolatedTaskQueueProducer;
 import org.junit.Assert;
 import org.junit.Test;
 
