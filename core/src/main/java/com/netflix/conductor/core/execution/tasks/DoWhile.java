@@ -53,6 +53,8 @@ public class DoWhile extends WorkflowSystemTask {
 		boolean hasFailures = false;
 		StringBuilder failureReason = new StringBuilder();
 		List<WorkflowTask> loopOver = task.getWorkflowTask().getLoopOver();
+		Map<String, Object> output = new HashMap<>();
+		task.getOutputData().put("iteration", task.getIteration());
 
 		for (WorkflowTask workflowTask : loopOver){
 			Task loopOverTask = workflow.getTaskByRefName(workflowTask.getTaskReferenceName());
@@ -66,21 +68,20 @@ public class DoWhile extends WorkflowSystemTask {
 			if (hasFailures){
 				failureReason.append(loopOverTask.getReasonForIncompletion()).append(" ");
 			}
-			task.getOutputData().put(workflowTask.getTaskReferenceName(), loopOverTask.getOutputData());
+			output.put(workflowTask.getTaskReferenceName(), loopOverTask.getOutputData());
 			allDone = taskStatus.isTerminal();
 			if (!allDone || hasFailures){
 				break;
 			}
 		}
+		task.getOutputData().put(String.valueOf(task.getIteration()), output);
 		if (hasFailures) {
 			return markLoopTaskFailed(task, failureReason.toString());
 		} else if (!allDone) {
 			return false;
 		}
-		task.getOutputData().put("iteration", task.getIteration());
 		boolean shouldContinue;
 		try {
-			task.getOutputData().put("iteration", task.getIteration());
 			shouldContinue = getEvaluatedCondition(task);
 			logger.debug("taskid {} condition evaluated to {}", task.getTaskId(), shouldContinue);
 			if (shouldContinue) {
@@ -108,7 +109,6 @@ public class DoWhile extends WorkflowSystemTask {
 	boolean markLoopTaskFailed(Task task, String failureReason) {
 		task.setReasonForIncompletion(failureReason);
 		task.setStatus(Status.FAILED);
-		task.getOutputData().put("iteration", task.getIteration());
 		logger.debug("taskid {} failed in {} iteration",task.getTaskId(), task.getIteration() + 1);
 		return true;
 	}
@@ -116,7 +116,7 @@ public class DoWhile extends WorkflowSystemTask {
 	boolean markLoopTaskSuccess(Task task) {
 		logger.debug("taskid {} took {} iterations to complete",task.getTaskId(), task.getIteration() + 1);
 		task.setStatus(Status.COMPLETED);
-		task.getOutputData().put("iteration", task.getIteration());
+
 		return true;
 	}
 
