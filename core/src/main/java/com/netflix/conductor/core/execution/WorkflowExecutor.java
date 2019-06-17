@@ -115,6 +115,10 @@ public class WorkflowExecutor {
         this.externalPayloadStorageUtils = externalPayloadStorageUtils;
     }
 
+    public DeciderService getDeciderService() {
+        return deciderService;
+    }
+
     /**
      * @throws ApplicationException
      */
@@ -475,7 +479,7 @@ public class WorkflowExecutor {
      * @param task failed or cancelled task
      * @return new instance of a task with "SCHEDULED" status
      */
-    private Task taskToBeRescheduled(Task task) {
+    public Task taskToBeRescheduled(Task task) {
         Task taskToBeRetried = task.copy();
         taskToBeRetried.setTaskId(IDGenerator.generate());
         taskToBeRetried.setRetriedTaskId(task.getTaskId());
@@ -1135,7 +1139,7 @@ public class WorkflowExecutor {
     }
 
     @VisibleForTesting
-    boolean scheduleTask(Workflow workflow, List<Task> tasks) {
+    public boolean scheduleTask(Workflow workflow, List<Task> tasks) {
         List<Task> createdTasks = new ArrayList<>();
 
         try {
@@ -1339,5 +1343,18 @@ public class WorkflowExecutor {
             return true;
         }
         return false;
+    }
+
+    public void removeLoopOverTasks(Task loopTask, Workflow workflow) {
+        // Remove all tasks after the "DO_WHILE" task
+        for(Task task: workflow.getTasks()) {
+            if (task.getSeq() > loopTask.getSeq()) {
+                executionDAOFacade.removeTask(task.getTaskId());
+            }
+        }
+        workflow.setTasks(workflow.getTasks().stream()
+                .filter(x -> (x.getSeq() <= loopTask.getSeq()))
+                .collect(Collectors.toCollection(ArrayList::new)));
+        executionDAOFacade.updateWorkflow(workflow);
     }
 }

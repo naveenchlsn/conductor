@@ -552,3 +552,51 @@ Task Input payload sample
 ```
 
 The task is marked as ```FAILED``` if the message could not be published to the Kafka queue. 
+
+
+## Do While Task
+
+Do While Task allows tasks to be executed in loop until given condition become false.
+
+**Parameters:**
+
+|name|description|
+|---|---|
+|loopCondition|condition to be evaluated after every iteration|
+|loopOver|List of tasks that needs to be executed in loop.|
+
+**Example**
+
+```json
+{
+            "name": "Loop Task",
+            "taskReferenceName": "Loop Task",
+            "type": "DO_WHILE",
+            "loopCondition": "if ($.second_task['response']['body'] + $.first_task['response']['body'] > 10) { false; } else { true; }",
+            "loopOver": [
+                {
+                    "name": "first_task",
+                    "taskReferenceName": "first_task",
+                    "inputParameters": {
+                        "http_request": {
+                            "uri": "http://localhost:8082",
+                            "method": "POST"
+                        }
+                    },
+                    "type": "HTTP"
+                },{
+                    "name": "second_task",
+                    "taskReferenceName": "second_task",
+                    "inputParameters": {
+                        "http_request": {
+                            "uri": "http://localhost:8082",
+                            "method": "POST"
+                        }
+                    },
+                    "type": "HTTP"
+                }
+            ],
+            "startDelay": 0,
+            "optional": false
+        }
+```
