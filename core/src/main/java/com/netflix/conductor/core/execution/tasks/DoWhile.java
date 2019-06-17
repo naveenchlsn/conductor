@@ -29,7 +29,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.script.ScriptException;
-import java.util.*;
+import java.util.Map;
+import java.util.List;
+import java.util.HashMap;
 
 /**
  * @author Manan
@@ -42,11 +44,6 @@ public class DoWhile extends WorkflowSystemTask {
 	}
 
 	Logger logger = LoggerFactory.getLogger(DoWhile.class);
-
-	@Override
-	public void cancel(Workflow workflow, Task task, WorkflowExecutor executor) {
-		task.setStatus(Status.CANCELED);
-	}
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -80,9 +77,11 @@ public class DoWhile extends WorkflowSystemTask {
 		} else if (!allDone) {
 			return false;
 		}
+		task.getOutputData().put("iteration", task.getIteration());
+		boolean shouldContinue;
 		try {
 			task.getOutputData().put("iteration", task.getIteration());
-			boolean shouldContinue = getEvaluatedCondition(task);
+			shouldContinue = getEvaluatedCondition(task);
 			logger.debug("taskid {} condition evaluated to {}", task.getTaskId(), shouldContinue);
 			if (shouldContinue) {
 				return scheduleLoopTasks(task, workflow, workflowExecutor);
