@@ -115,10 +115,6 @@ public class WorkflowExecutor {
         this.externalPayloadStorageUtils = externalPayloadStorageUtils;
     }
 
-    public DeciderService getDeciderService() {
-        return deciderService;
-    }
-
     /**
      * @throws ApplicationException
      */
@@ -479,7 +475,7 @@ public class WorkflowExecutor {
      * @param task failed or cancelled task
      * @return new instance of a task with "SCHEDULED" status
      */
-    public Task taskToBeRescheduled(Task task) {
+    private Task taskToBeRescheduled(Task task) {
         Task taskToBeRetried = task.copy();
         taskToBeRetried.setTaskId(IDGenerator.generate());
         taskToBeRetried.setRetriedTaskId(task.getTaskId());
@@ -1139,7 +1135,7 @@ public class WorkflowExecutor {
     }
 
     @VisibleForTesting
-    public boolean scheduleTask(Workflow workflow, List<Task> tasks) {
+    boolean scheduleTask(Workflow workflow, List<Task> tasks) {
         List<Task> createdTasks = new ArrayList<>();
 
         try {
@@ -1356,5 +1352,11 @@ public class WorkflowExecutor {
                 .filter(x -> (x.getSeq() <= loopTask.getSeq()))
                 .collect(Collectors.toCollection(ArrayList::new)));
         executionDAOFacade.updateWorkflow(workflow);
+    }
+
+    public void scheduleLoopTasks(Task loopTask, Workflow workflow) {
+        //Get all the loopOver tasks and schedule it.
+        List<Task> tasks = deciderService.getTasksToBeScheduled(workflow, loopTask.getWorkflowTask(), loopTask.getRetryCount());
+        scheduleTask(workflow, tasks);
     }
 }
