@@ -556,7 +556,9 @@ The task is marked as ```FAILED``` if the message could not be published to the 
 
 ## Do While Task
 
-Do While Task allows tasks to be executed in loop until given condition become false.
+Do While Task allows tasks to be executed in loop until given condition become false. Condition is evalued using nasshorn javascript engine.
+Task history will be removed from execution once new iteration is scheduled.
+Condition can be of the iteration form or any of the loopover task output can be used.
 
 **Parameters:**
 
