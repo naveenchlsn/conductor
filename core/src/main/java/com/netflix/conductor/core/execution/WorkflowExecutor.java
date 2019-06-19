@@ -782,8 +782,8 @@ public class WorkflowExecutor {
         return executionDAOFacade.getTasksByName(taskType, startKey, count);
     }
 
-    public List<Workflow> getRunningWorkflows(String workflowName) {
-        return executionDAOFacade.getPendingWorkflowsByName(workflowName);
+    public List<Workflow> getRunningWorkflows(String workflowName, int version) {
+        return executionDAOFacade.getPendingWorkflowsByName(workflowName, version);
 
     }
 
@@ -796,8 +796,8 @@ public class WorkflowExecutor {
 
     }
 
-    public List<String> getRunningWorkflowIds(String workflowName) {
-        return executionDAOFacade.getRunningWorkflowIdsByName(workflowName);
+    public List<String> getRunningWorkflowIds(String workflowName, int version) {
+        return executionDAOFacade.getRunningWorkflowIds(workflowName, version);
     }
 
     /**
