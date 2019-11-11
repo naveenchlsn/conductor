@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import redis.clients.jedis.JedisCommands;
+import redis.clients.jedis.exceptions.JedisConnectionException;
 import redis.clients.jedis.exceptions.JedisNoReachableClusterNodeException;
 
 import java.net.UnknownHostException;
@@ -28,7 +29,7 @@ public class RedisClusterJedisProviderTest {
         Assert.assertNotNull(commands);
     }
 
-    @Test(expected = UnknownHostException.class)
+    @Test(expected = JedisConnectionException.class)
     public void onGetWithPasswordInHosts_commandsIsNotNull() {
         HostSupplier hostSupplier = Mockito.mock(HostSupplier.class);
         Host mockHost = new Host("hostname", 123, "region", Host.Status.Up, "hastag", "password");
